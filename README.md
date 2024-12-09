@@ -12,10 +12,8 @@ Yani bu yayını açmamım asıl nedeni "ocppd" projesiydi.
 #---> Herkese Hâyırlı Çalışmalar Dilerim <---#
 
 
-#--------------------------------------------#
-          
-          Otomatik CPP Derleyici
-          
+#--------------------------------------------#      
+          Otomatik CPP Derleyici          
 #--------------------------------------------#
 -Bu proje sadece cpp projelerini otomatik derlemek için hazırlandı.
 -Değişkenler önplana alınarak diğer programlama dilleri için azıcık destek verilmek istenmiştir.
