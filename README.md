@@ -27,7 +27,10 @@ Yani bu yayını açmamım asıl nedeni "ocppd" projesiydi.
 -Visual Studio Code ile dosyayı açıp gerekli ayarlamaları rahatlıkla yapabilirsiniz.
 
 -Kurulum: ocppd dosyasını /usr/bin altına taşımanız yeterlidir.
+
 -daha sonra terminalden ocppd "Dosya Yolu" belirtmeniz yeterlidir.
+
 -Derlenecek cpp projesinin içinde bulunan source dosyaları ve header dosyaları klasör içinde olmamalıdır.
+
 -Ana dizin içinde bulunmalıdır.
 
