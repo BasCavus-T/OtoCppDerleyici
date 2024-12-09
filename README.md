@@ -15,10 +15,15 @@ Yani bu yayını açmamım asıl nedeni "ocppd" projesiydi.
 #--------------------------------------------#      
           Otomatik CPP Derleyici          
 #--------------------------------------------#
+
 -Bu proje sadece cpp projelerini otomatik derlemek için hazırlandı.
+
 -Değişkenler önplana alınarak diğer programlama dilleri için azıcık destek verilmek istenmiştir.
+
 -#->  değişir  <-# yazan blokları kendi projenize göre ayarlayabilirsiniz.
+
 -#-> değişemez <-# yazan blokları ise değiştirmek önerilmez ama ben ne yaptığımı biliyorum kardeşim diyorsanız değiştirebilirsiniz.
+
 -Visual Studio Code ile dosyayı açıp gerekli ayarlamaları rahatlıkla yapabilirsiniz.
 
 -Kurulum: ocppd dosyasını /usr/bin altına taşımanız yeterlidir.
