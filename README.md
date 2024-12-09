@@ -4,6 +4,7 @@ Aslında MFKontrol ilk OtoCppDerleyici prototip'iydi yani MFKontrol için versio
 Diğerleride bu projeyi hazırlarken komutları araştırma
 sırasında oluşan shell script'lerdir.
 Yani bu yayını açmamım asıl nedeni "ocppd" projesiydi.
+
 #---> Herkese Hâyırlı Çalışmalar Dilerim <---#
 
 #--------------------------------------------#
