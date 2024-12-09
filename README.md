@@ -13,7 +13,7 @@ Yani bu yayını açmamım asıl nedeni "ocppd" projesiydi.
 
 
 #--------------------------------------------#      
-          Otomatik CPP Derleyici          
+                Otomatik CPP Derleyici          
 #--------------------------------------------#
 
 -Bu proje sadece cpp projelerini otomatik derlemek için hazırlandı.
