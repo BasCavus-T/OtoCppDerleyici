@@ -1,14 +1,21 @@
 Selemün Aleyküm benim adım Muhammet hobi olarak yazılımla ilgileniyorum. 
+
 İlk defa GİTHUB kullandığım için yanlışlıkla prototip olan dosyalarımıda paylaşmışım.
+
 Aslında MFKontrol ilk OtoCppDerleyici prototip'iydi yani MFKontrol için version 1 OtoCppDerleyici diyebiliriz. 
+
 Diğerleride bu projeyi hazırlarken komutları araştırma
 sırasında oluşan shell script'lerdir.
+
 Yani bu yayını açmamım asıl nedeni "ocppd" projesiydi.
 
 #---> Herkese Hâyırlı Çalışmalar Dilerim <---#
 
+
 #--------------------------------------------#
+          
           Otomatik CPP Derleyici
+          
 #--------------------------------------------#
 -Bu proje sadece cpp projelerini otomatik derlemek için hazırlandı.
 -Değişkenler önplana alınarak diğer programlama dilleri için azıcık destek verilmek istenmiştir.
