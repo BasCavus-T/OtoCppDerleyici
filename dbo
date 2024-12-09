@@ -1,0 +1,39 @@
+#! /bin/bash
+
+DosyaAdi="${1##*/}"
+DosyaYolu="${1%/*}";
+
+if [[ "$#" == 1 ]] then DosyaAdi="${1##*/}"; DosyaYolu="${1%/*}"; cd "$DosyaYolu"; fi
+if [[ "$#" == 1 && "$DosyaAdi" == "$DosyaYolu" ]] then DosyaAdi="$1"; DosyaYolu="$PWD"; fi
+
+Dy="$(ls -l | grep "$DosyaAdi" | awk '{print $1}')"
+Idvks="$(ls -l | grep "$DosyaAdi" | awk '{print $2}')"
+Dsb="$(ls -l | grep "$DosyaAdi" | awk '{print $3}')"
+Dgb="$(ls -l | grep "$DosyaAdi" | awk '{print $4}')"
+Db="$(ls -l | grep "$DosyaAdi" | awk '{print $5}')"
+Doa="$(ls -l | grep "$DosyaAdi" | awk '{print $6}')"
+Dog="$(ls -l | grep "$DosyaAdi" | awk '{print $7}')"
+Dosd="$(ls -l | grep "$DosyaAdi" | awk '{print $8}')"
+
+Dkl="${Dy:0:1}"
+Dyk="${Dy:1:3}"
+Dyg="${Dy:4:3}"
+Dyd="${Dy:7:3}"
+
+echo
+echo " Dosya Adı -> [ "$DosyaAdi" ]"
+echo " Dosya Yolu -> [ "$DosyaYolu" ]"
+if [[ "$Dkl" == "-" ]] then echo " Bu Bir Dosya'dır -> [ "$Dkl" ]"
+elif [[ "$Dkl" == "d" ]] then echo " Bu Bir Klasör'dür -> [ "$Dkl" ]"
+elif [[ "$Dkl" == "l" ]] then echo " Bu Bir Symlink'dir -> [ "$Dkl" ]"; fi
+echo " Kullanıcı Yetkileri -> [ "$Dyk" ]"
+echo " Grup Yetkileri -> [ "$Dyg" ]"
+echo " Diğer Yetkileri -> [ "$Dyd" ]"
+echo " İçindeki Dosya Ve Klasör Sayısı -> [ "$Idvks" ]"
+echo " Dosya'nın Sahibi -> [ "$Dsb" ]"
+echo " Dosya'nın Grubu -> [ "$Dgb" ]"
+echo " Dosya'nın Boyutu -> [ "$Db"-Mb ]"
+echo " Dosya'nın Oluşturulduğu Ay -> [ "$Doa" ]"
+echo " Dosya'nın Oluşturulduğu Gün -> [ "$Dog" ]"
+echo " Dosya'nın Oluşturulduğu Saat-Dakika -> [ "$Dosd" ]"
+echo

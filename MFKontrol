@@ -1,0 +1,181 @@
+#! /bin/bash
+
+Compiler="$(find /usr/bin/ -name "g++")"
+
+if ! [[ "$Compiler" =~ ^[[:blank:]]*$ ]]
+then
+VersionSorgu="$(g++ --version)"
+GVersion="${VersionSorgu:12:6}"
+
+if [[ "$GVersion" > "12" ]] then GCompiler="g++-13";
+else GCompiler="g++"; fi
+
+else sudo apt install g++-13; GCompiler="g++-13"; fi
+
+Incx="-I"
+Compx="-c"
+Objex="-o"
+DosyaYolu="$PWD"
+cd "$DosyaYolu"
+
+
+echo "-İşlem Başladığında Kaynak Dosya'larınız Silinebilir. Yedeklemeyi Unutmayınız!"
+echo
+#----------------------------> KLASÖR OLUŞTURMA SCRİPT'İ <-------------------------#
+read -p "[#]-> Executable Dosya'sını Oluşturmak İstediğiniz Klasör İsmi: " Exe
+if ! [[ "$Exe" =~ ^[[:blank:]]*$ ]] then Exe="$Exe"; else Exe="bin"; fi
+if [[ -d "$Exe" ]] then listele="$(ls ./"$Exe" | awk '{print $1}')"; else mkdir "$Exe"; fi
+if ! [[ "$listele" =~ ^[[:blank:]]*$ ]] then
+echo "[!]-> "$Exe" İsminde Bir Klasör Mevcut"
+echo "-Klasör İçindeki Mevcut Dosya/Dosyalar"
+echo; echo "$listele"; echo
+          
+     echo "-Klasör'ü Silip Yeni Klasör Oluşturalım mı?"
+     echo "[1]-> Evet"
+     echo "[2]-> Hayır"
+     read -p "[#]-> " Secim
+          
+          if [[ "$Secim" == "1" ]] then rm -rf "$Exe"; mkdir "$Exe"; echo;
+          elif [[ "$Secim" == "2" ]] then echo; echo "[!]-> MFKontrol Sonlandırılıyor"; sleep 0.3; kill -2 "$$";
+          else echo; echo "[!]-> Hatalı Seçim"; echo "[!]-> MFKontrol Sonlandırılıyor"; sleep 0.3; kill -2 "$$"; fi fi
+
+if [[ "$listele" =~ ^[[:blank:]]*$ ]] then rmdir "$Exe"; mkdir "$Exe"; fi
+
+read -p "[#]-> Header Dosya'larını Taşımak İstediğiniz Klasör İsmi: " Incs
+if ! [[ "$Incs" =~ ^[[:blank:]]*$ ]] then Incs="$Incs"; else Incs="inc"; fi
+if [[ -d "$Incs" ]] then listele="$(ls ./"$Incs" | awk '{print $1}')"; else mkdir "$Incs"; fi
+if ! [[ "$listele" =~ ^[[:blank:]]*$ ]] then
+echo "[!]-> "$Incs" İsminde Bir Klasör Mevcut"
+echo "-Klasör İçindeki Mevcut Dosya/Dosyalar"
+echo; echo "$listele"; echo
+          
+     echo "-Klasör'ü Silip Yeni Klasör Oluşturalım mı?"
+     echo "[1]-> Evet"
+     echo "[2]-> Hayır"
+     read -p "[#]-> " Secim
+          
+          if [[ "$Secim" == "1" ]] then rm -rf "$Incs"; mkdir "$Incs"; echo;
+          elif [[ "$Secim" == "2" ]] then echo; echo "[!]-> MFKontrol Sonlandırılıyor"; sleep 0.3; kill -2 "$$";
+          else echo; echo "[!]-> Hatalı Seçim"; echo "[!]-> MFKontrol Sonlandırılıyor"; sleep 0.3; kill -2 "$$"; fi fi
+
+if [[ "$listele" =~ ^[[:blank:]]*$ ]] then rmdir "$Incs"; mkdir "$Incs"; fi
+
+read -p "[#]-> Library Dosya'larını Oluşturmak İstediğiniz Klasör İsmi: " Libs
+if ! [[ "$Libs" =~ ^[[:blank:]]*$ ]] then Libs="$Libs"; else Libs="lib"; fi
+if [[ -d "$Libs" ]] then listele="$(ls ./"$Libs" | awk '{print $1}')"; else mkdir "$Libs"; fi
+if ! [[ "$listele" =~ ^[[:blank:]]*$ ]] then
+echo "[!]-> "$Libs" İsminde Bir Klasör Mevcut"
+echo "-Klasör İçindeki Mevcut Dosya/Dosyalar"
+echo; echo "$listele"; echo
+          
+     echo "-Klasör'ü Silip Yeni Klasör Oluşturalım mı?"
+     echo "[1]-> Evet"
+     echo "[2]-> Hayır"
+     read -p "[#]-> " Secim
+          
+          if [[ "$Secim" == "1" ]] then rm -rf "$Libs"; mkdir "$Libs"; echo;
+          elif [[ "$Secim" == "2" ]] then echo; echo "[!]-> MFKontrol Sonlandırılıyor"; sleep 0.3; kill -2 "$$";
+          else echo; echo "[!]-> Hatalı Seçim"; echo "[!]-> MFKontrol Sonlandırılıyor"; sleep 0.3; kill -2 "$$"; fi fi
+
+if [[ "$listele" =~ ^[[:blank:]]*$ ]] then rmdir "$Libs"; mkdir "$Libs"; fi
+
+read -p "[#]-> Source Dosya'larını Taşımak İstediğiniz Klasör İsmi: " Srcs
+if ! [[ "$Srcs" =~ ^[[:blank:]]*$ ]] then Srcs="$Srcs"; else Srcs="src"; fi
+if [[ -d "$Srcs" ]] then listele="$(ls ./"$Srcs" | awk '{print $1}')"; else mkdir "$Srcs"; fi
+if ! [[ "$listele" =~ ^[[:blank:]]*$ ]] then
+echo "[!]-> "$Srcs" İsminde Bir Klasör Mevcut"
+echo "-Klasör İçindeki Mevcut Dosya/Dosyalar"
+echo; echo "$listele"; echo
+          
+     echo "-Klasör'ü Silip Yeni Klasör Oluşturalım mı?"
+     echo "[1]-> Evet"
+     echo "[2]-> Hayır"
+     read -p "[#]-> " Secim
+          
+          if [[ "$Secim" == "1" ]] then rm -rf "$Srcs"; mkdir "$Srcs"; echo;
+          elif [[ "$Secim" == "2" ]] then echo; echo "[!]-> MFKontrol Sonlandırılıyor"; sleep 0.3; kill -2 "$$";
+          else echo; echo "[!]-> Hatalı Seçim"; echo "[!]-> MFKontrol Sonlandırılıyor"; sleep 0.3; kill -2 "$$"; fi fi
+
+if [[ "$listele" =~ ^[[:blank:]]*$ ]] then rmdir "$Srcs"; mkdir "$Srcs"; fi
+#----------------------------------------------------------------------------------#
+
+#-----------------------------> DOSYA TAŞIMA SCRİPT'İ <----------------------------#
+echo
+echo "-Örnek: 'Dosya_Adı.hpp' için 'hpp' yazmanız yeterlidir"
+echo "-Örnek: 'Dosya_Adı.cpp' için 'cpp' yazmanız yeterlidir"
+
+read -p "[#]-> Mevcut Header Dosya'larının Uzantılarını Giriniz: " Hu
+if ! [[ "$Hu" =~ ^[[:blank:]]*$ ]] then mv *."$Hu" ./"$Incs"
+else Hu="hpp"; mv *."$Hu" ./"$Incs"; fi
+
+read -p "[#]-> Mevcut Source Dosya'larının Uzantılarını Giriniz: " Su
+if ! [[ "$Su" =~ ^[[:blank:]]*$ ]] then mv *."$Su" ./"$Srcs"
+else Su="cpp"; mv *."$Su" ./"$Srcs"; fi
+#----------------------------------------------------------------------------------#
+
+#--------------------------------> DERLEME SCRİPT'İ <------------------------------#
+echo
+echo "-Örnek: 'Dosya_Adı.o' için 'o' yazmanız yeterlidir"
+echo "-Örnek: 'Dosya_Adı.exe' için 'exe' yazmanız yeterlidir"
+
+read -p "[#]-> Oluşturulacak Obje Dosya'larına Uzantı Veriniz: " Ou
+if ! [[ "$Ou" =~ ^[[:blank:]]*$ ]] then Ou="$Ou"; else Ou="o"; fi
+
+read -p "[#]-> Oluşturulacak Çalıştırılabilir Dosya'ya Uzantı Veriniz: " Cu
+if ! [[ "$Cu" =~ ^[[:blank:]]*$ ]] then Cu="$Cu"; else Cu="exe"; fi
+
+Dosyalar=( '' )
+ss="1"
+echo
+echo "-Source Klasör'üne Taşınan Dosya İsimlerini Uzantısız Yazınız"
+echo "-Örnek: 'Dosya.cpp' için 'Dosya' Yazmanız Yeterlidir"
+read -p "[#]-> Cpp Dosya Adedi: " Int
+echo
+DosyaCompile="0"
+for (( i=0; i<"$Int"; i++ ))
+     do
+          read -p ""$ss".CPP Dosya'sının Adı -> " Str
+          "$GCompiler" "$Incx" ./"$Incs" "$Compx" ./"$Srcs"/""$Str"."$Su"" "$Objex" ./"$Libs"/""$Str"."$Ou""
+          ((ss++))
+          Dosyalar[i]="$Str"
+          ((DosyaCompile++))
+     done
+echo
+echo "[+]-> Compile Edilen Dosya Sayısı: "$DosyaCompile""
+#----------------------------------------------------------------------------------#
+
+#-------------------------------> BAĞLAMA SCRİPT'İ <-------------------------------#
+echo
+read -p "[#]-> Program Adı: " PAdi
+if ! [[ "$PAdi" =~ ^[[:blank:]]*$ ]] 
+then 
+"$GCompiler" ./"$Libs"/""${Dosyalar[0]}.$Ou"" ./"$Libs"/""${Dosyalar[1]}.$Ou"" "$Objex" ./"$Exe"/"$PAdi.$Cu" 
+else 
+PAdi="Program"; "$GCompiler" ./"$Libs"/""${Dosyalar[0]}.$Ou"" ./"$Libs"/""${Dosyalar[1]}.$Ou"" "$Objex" ./"$Exe"/"$PAdi.$Cu"; fi
+#----------------------------------------------------------------------------------#
+
+#---------------> DERLENEN VE BAĞLANAN PROGRAMI ÇALIŞTIRMA SCRİPT'İ <--------------#
+./"$Exe"/"$PAdi.$Cu"
+#----------------------------------------------------------------------------------#
+
+#-------------------------> PROGRAM SONLANDIRMA SCRŞPT'İ <-------------------------#
+Uou=$(echo $Ou | tr [:lower:] [:upper:])
+Usu=$(echo $Su | tr [:lower:] [:upper:])
+Uhu=$(echo $Hu | tr [:lower:] [:upper:])
+echo "-Proje'nizin Son Halimi?"
+select i in "Evet" "Hayır"
+     do
+          case "$i" in
+               "Evet" ) mv ./"$Srcs"/*."$Su" ./; mv ./"$Incs"/*."$Hu" ./; mv ./"$Libs"/*."$Ou" ./; mv ./"$Exe"/*."$Cu" ./;
+                        rmdir "$Exe" "$Incs" "$Libs" "$Srcs";
+                        mkdir ""$Uou" Dosyaları"; mv ./*"$Ou" ./""$Uou" Dosyaları"; mkdir ""$Usu" Dosyaları"; mv ./*"$Su" ./""$Usu" Dosyaları"; mkdir ""$Uhu" Dosyaları"; mv ./*"$Hu" ./""$Uhu" Dosyaları";
+                        clear; echo "-Projeniz Hayırlı Olsun"; kill -2 "$$";;
+               
+               "Hayır" ) mv ./"$Srcs"/*."$Su" ./; mv ./"$Incs"/*."$Hu" ./; mv ./"$Libs"/*."$Ou" ./; mv ./"$Exe"/*."$Cu" ./;
+                         rmdir "$Exe" "$Incs" "$Libs" "$Srcs"; 
+                         rm *".$Ou" *".$Cu"; clear; echo "-Kaynak Dosyalarınız Dışındaki Dosyalar Silinmiştir"; kill -2 "$$";;
+               
+               * ) echo "-Hatalı Seçim"; kill -2 "$$";;
+          esac
+     done
+#----------------------------------------------------------------------------------#

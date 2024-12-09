@@ -1,0 +1,188 @@
+#! /bin/bash
+
+#------------------------------------------------------------------------------------#-> G++ Compiler Olup Olmadığının Varsa Version Kontrol Edilmesi
+COMP="$(find /usr/bin/ -name "g++")"        #-> Compiler Arama Komutu ( COMP )
+
+if ! [[ "$COMP" =~ ^[[:blank:]]*$ ]]
+then
+VERSORGU="$(g++ --version)"                 #-> Compiler Version Sorgusu ( VERSORGU )
+GVER="${VERSORGU:12:6}"                     #-> Compiler Version Sorgusunun İlgili Kısmının Değişkene Atanması ( GVER )
+
+#-------------------------------------------------------------------------------------#-> GVER Değişkenine Göre Compiler Ataması ve Uygun Compiler'ın İndirilmesi ( GCOMP )
+if [[ "$GVER" > "12" ]] then GCOMP="g++-13";
+else GCOMP="g++"; fi
+
+else sudo apt install g++-13; GCOMP="g++-13"; fi
+
+#-------------------------------------------------------------------------------------#-> Dosya ve Klasörler İçin Change Directory
+if [[ "$#" == "0" ]] then DYOLU="$PWD"; cd "$DYOLU"; fi     #-> Dosya Yolu ( DYOLU )
+if [[ "$#" == "1" ]] then if [[ -d "$1" ]] then DYOLU="$1"; cd "$DYOLU"; else echo "$HDYTEXT"; exit 1; fi fi
+
+#-------------------------------------------------------------------------------------#-> Komut Değişkenleri ( Değişemez Yazanların Değişmesi Önerilmez )
+UK="sleep"              #-> Değişemez <-#      #-> Uyku Komutu ( UK )
+PBSLPD="0.9"            #->  Değişir  <-#      #-> Program Başlangıç Sleep Değişkeni ( PBSLPD )
+SDOSLPD="0.1"           #->  Değişir  <-#      #-> Source Dosyalarını Okuma Sleep Değişkeni ( SDOSLPD )
+HDOSLPD="0.1"           #->  Değişir  <-#      #-> Header Dosyalarını Okuma Sleep Değişkeni ( HDOSLPD )
+GCOMPSLPD="0.3"         #->  Değişir  <-#      #-> G++/G++-13 Compiler Sleep Değişkeni ( GCOMPSLPD )
+PSUSLPD="3.5"           #->  Değişir  <-#      #-> Program Sonu Uyarılarının Sleep Değişkeni ( PSUSLPD )
+CK="exit"               #-> Değişemez <-#      #-> Çıkış Komutu ( CK )
+CKD="1"                 #-> Değişemez <-#      #-> Çıkış Komutu Değişkeni ( CKD )
+YK="echo"               #-> Değişemez <-#      #-> Yazdırma Komutu ( YK )
+ALK="ls -AS1"           #-> Değişemez <-#      #-> Argümanlı Listeleme Komutu ( ALK )
+LK="ls"                 #-> Değişemez <-#      #-> Listeleme Komutu ( LK )
+DOK="touch"             #-> Değişemez <-#      #-> Dosya Oluşturma Komutu ( DOK )
+KOK="mkdir"             #-> Değişemez <-#      #-> Klasör Oluşturma Komutu ( KOK )
+DKTK="mv"               #-> Değişemez <-#      #-> Dosya ve Klasör Taşıma Komutu ( DKTK )
+DKSK="rm -rf"           #-> Değişemez <-#      #-> Dosya ve Klasör Silme Komutu ( DKSK )
+TK="clear"              #-> Değişemez <-#      #-> Temizleme Komutu ( TK )
+
+#-------------------------------------------------------------------------------------#-> Dosya Uzantıları Değişkenleri ( Başka Bir Programlama Dili İçin Değişebilir )
+SDU="cpp"               #->  Değişir  <-#      #-> Source Dosya Uzantısı ( SDU )
+HDU="hpp"               #->  Değişir  <-#      #-> Header Dosya Uzantısı ( HDU )
+LDU="opp"               #->  Değişir  <-#      #-> Library Dosya Uzantısı ( LDU )
+EDU="exe"               #->  Değişir  <-#      #-> Exe Dosya Uzantısı ( EDU )
+HKU="txt"               #->  Değişir  <-#      #-> Hata Kayıtları Uzantısı ( HKU )
+PA="Program"            #->  Değişir  <-#      #-> Program Adı ( PA )
+HKD="HK"                #->  Değişir  <-#      #-> Hata Kayıtları Değişkeni ( HKD )
+COMPKD="CK"             #->  Değişir  <-#      #-> Compile Kayıtları Değişkeni ( COMPKD )
+COMPHKD="CHK"           #->  Değişir  <-#      #-> Compile Hata Kayıtları Değişkeni ( COMPHKD )
+
+#--------------------------------------------------------------------------------------#-> Dizin İsimlerinin Değişkenleri ( Başka Bir Programlama Dili İçin Değişebilir )
+SRCSK="srcs"            #->  Değişir  <-#       #-> Sources Klasör İsmi ( SRCSK )
+INCSK="incs"            #->  Değişir  <-#       #-> Headers Klasör İsmi ( INCSK )
+LIBSK="libs"            #->  Değişir  <-#       #-> Library Klasör İsmi ( LIBSK )
+EXEK="${DYOLU##*/}"     #-> Değişemez <-#       #-> Executable Klasör İsmi ( EXEK )
+
+#--------------------------------------------------------------------------------------#-> Sources Dosyalarının Değişkenleri ( Hiçbir Koşulda Değiştirilmesi Önerilmez )
+SDA="0"                 #-> Değişemez <-#       #-> Source Dosya Adedi ( SDA )
+SDI="0"                 #-> Değişemez <-#       #-> Source Dizi İndexi ( SDI )
+SDD=( '' )              #-> Değişemez <-#       #-> Source Dosya Dizisi ( SDD )
+
+#--------------------------------------------------------------------------------------#-> Headers Dosyalarının Değişkenleri ( Hiçbir Koşulda Değiştirilmesi Önerilmez )
+HDA="0"                 #-> Değişemez <-#       #-> Header Dosya Adedi ( HDA )
+HDI="0"                 #-> Değişemez <-#       #-> Header Dizi İndexi ( HDI )
+HDD=( '' )              #-> Değişemez <-#       #-> Header Dosya Dizisi ( HDD )
+
+#--------------------------------------------------------------------------------------#-> Compile İşlemi Değişkenleri ( Başka Bir Programlama Dili İçin Değişebilir )
+CEDA="0"                #-> Değişemez <-#       #-> Compile Edilen Dosya Adedi ( CEDA )
+INCD="-I"               #-> Değişemez <-#       #-> Include Değişkeni ( INCD )
+COMPD="-c"              #-> Değişemez <-#       #-> Compiler Değişkeni ( COMPD )
+OD="-o"                 #-> Değişemez <-#       #-> Oluşturma Değişkeni ( OD )
+BK="./"                 #-> Değişemez <-#       #-> Bulunduğun Klasör ( BK )
+YN="*."                 #-> Değişemez <-#       #-> Yıldız Nokta ( YN )
+KA="/"                  #-> Değişemez <-#       #-> Klasör Altına ( KA )
+AK="++"                 #-> Değişemez <-#       #-> Arttırma Komutu ( AK )
+
+#--------------------------------------------------------------------------------------#-> Kullanılan Yazılar ( Translate Edilebilir ve Değişebilirler )
+OCPPDTEXT="[!]-> Otomatik CPP(C++) Derleyicisidir"                                              #->  Değişir  <-#       #-> Otomatik CPP Derleyicisi Yazısı ( OCPPDTEXT )
+SABTEXT="[!]-> Başka Bir Programlama Dili İçin Script İçi Ayarlara Bakınız"                     #->  Değişir  <-#       #-> Script Ayarlarına Bakınız Yazısı ( SABTEXT )
+SHDTEXT="[!]-> Source ve Header Dosyalarınızı Ana Klasör İçine Çıkartın"                        #->  Değişir  <-#       #-> Source ve Header Dosyaları Yazısı ( SHDTEXT )
+HDYTEXT="[!]-> Hatalı Dosya Yolu"                                                               #->  Değişir  <-#       #-> Hatalı Dosya Yolu Yazısı ( HDYTEXT )
+CASEEVET="[+]-> Projeniz Hâyırlı Olsun"                                                         #->  Değişir  <-#       #-> Case Evet Seçildiğinde Çıkan Yazı-1 ( CASEEVET )
+CASEEVET0="[+]-> Dosyalarınız Başarılı Bir Şekilde Dizinlenmiştir"                              #->  Değişir  <-#       #-> Case Evet Seçildiğinde Çıkan Yazı-2 ( CASEEVET0 )
+CASEEVET1="[+]-> Hâyırlı Günler Hâyırlı Çalışmalar Dileriz"                                     #->  Değişir  <-#       #-> Case Evet Seçildiğinde Çıkan Yazı-3 ( CASEEVET1 )
+CASEHAYIR="[+]-> Source ve Header Dışındaki Dosyalarınız Silinmiştir"                           #->  Değişir  <-#       #-> Case Hayır Seçildiğinde Çıkan Yazı-1 ( CASEHAYIR )
+CASEHAYIR0="[+]-> Hâyırlı Günler Hâyırlı Çalışmalar Dileriz"                                    #->  Değişir  <-#       #-> Case Hayır Seçildiğinde Çıkan Yazı-2 ( CASEHAYIR0 )
+CASEDIGER="[!]-> Hatalı Seçim"                                                                  #->  Değişir  <-#       #-> Case Hatalı Seçildiğinde Çıkan Yazı-1 ( CASEDIGER )
+CASEDIGER0="[!]-> Otomatik CPP Derleyici Sonlandırılıyor"                                       #->  Değişir  <-#       #-> Case Hatalı Seçildiğinde Çıkan Yazı-2 ( CASEDIGER0 )
+CASEDIGER1="[+]-> Hâyırlı Günler Hâyırlı Çalışmalar Dileriz"                                    #->  Değişir  <-#       #-> Case Hatalı Seçildiğinde Çıkan Yazı-3 ( CASEDIGER1 )
+SDATEXT="[+]-> Source Dosya Adedi: "                                                            #->  Değişir  <-#       #-> Source Dosya Adedi Yazısı ( SDATEXT )
+HDATEXT="[+]-> Header Dosya Adedi: "                                                            #->  Değişir  <-#       #-> Header Dosya Adedi Yazısı ( HDATEXT )
+CEDATEXT="[+]-> Compile Edilen Dosya Adedi: "                                                   #->  Değişir  <-#       #-> Compile Edilen Dosya Adedi Yazısı ( CEDATEXT )
+CEOHTEXT="[!]-> Compile Esnasında Oluşan Hatalar İçin "$COMPHKD.$HKU" Dosyasına Bakınız"        #->  Değişir  <-#       #-> Compile Esnasında Oluşan Hatalar Yazısı ( CEOHTEXT )
+OEXETEXT="[!]-> "$EXEK" Klasöründe "$COMPHKD.$HKU" Dosyasını Kontrol Ediniz"                    #->  Değişir  <-#       #-> Oluşturulamamış Executable Yazısı ( OEXETEXT )
+PSHMTEXT="[!]-> Projenizin Son Hâli mi?"                                                        #->  Değişir  <-#       #-> Projenin Son Hali Yazısı ( PSHMTEXT )
+PSETEXT="Evet"                                                                                  #->  Değişir  <-#       #-> Proje Sonu Evet Yazısı ( PSETEXT )
+PSHTEXT="Hayır"                                                                                 #->  Değişir  <-#       #-> Proje Sonu Hayır Yazısı ( PSHTEXT )
+
+#-----------------------------------------------------------------------------------------------#-> OCPPD Başlangıç
+$YK "$OCPPDTEXT"
+$YK "$SABTEXT"
+$YK "$SHDTEXT"
+$UK "$PBSLPD"
+$YK
+
+#-----------------------------------------------------------------------------------------------#-> Kayıt Dosyalarının Oluşturulması
+$DOK "$HKD.$HKU" 2>> "$HKD.$HKU"                                                                #-> Hata_Kayitlari.txt Dosyasının Oluşturulması
+$DOK "$COMPKD.$HKU" 2>> "$HKD.$HKU"                                                             #-> Compile_Kayilari.txt Dosyasının Oluşturulması
+$DOK "$COMPHKD.$HKU" 2>> "$HKD.$HKU"                                                            #-> Compile_Hata_Kayıtları.txt Dosyasının Oluşturulması
+
+#-----------------------------------------------------------------------------------------------#-> Source Dosyalarının Sayımı ve Dizi İçine Alınması
+for i in $($ALK $YN"$SDU" 2>> "$HKD.$HKU")
+    do
+        SDD[$SDI]="${i%.*}"
+        ((SDA$AK))
+        ((SDI$AK))
+        $UK "$SDOSLPD"
+
+    done 2>> "$HKD.$HKU"
+        $YK "$SDATEXT$SDA"
+        $KOK "$SRCSK" 2>> "$HKD.$HKU"
+        $DKTK $BK$YN"$SDU" $BK"$SRCSK"$KA 2>> "$HKD.$HKU"
+
+#-----------------------------------------------------------------------------------------------#-> Header Dosyalarının Sayımı ve Dizi İçine Alınması
+for i in $($ALK $YN"$HDU" 2>> "$HKD.$HKU")
+    do
+        HDD[$HDI]="${i%.*}"
+        ((HDA$AK))
+        ((HDI$AK))
+        $UK "$HDOSLPD"
+
+    done 2>> "$HKD.$HKU" 
+        $YK "$HDATEXT$HDA"
+        $KOK "$INCSK" 2>> "$HKD.$HKU"
+        $DKTK $BK$YN"$HDU" $BK"$INCSK"$KA 2>> "$HKD.$HKU"
+
+#------------------------------------------------------------------------------------------------#-> Compile İşlemi ve Compile Edilen Dosyaların Sayımı  
+for (( i=0; i<"$SDA"; i++ ))
+    do
+        $YK "$GCOMP" "$INCD" $BK"$INCSK" "$COMPD" $BK"$SRCSK"$KA"${SDD[i]}.$SDU" "$OD" $BK"${SDD[i]}.$LDU" >> "$COMPKD.$HKU"
+        "$GCOMP" "$INCD" $BK"$INCSK" "$COMPD" $BK"$SRCSK"$KA"${SDD[i]}.$SDU" "$OD" $BK"${SDD[i]}.$LDU" 2>> "$COMPHKD.$HKU"
+        ((CEDA$AK))
+        $UK "$GCOMPSLPD"
+
+    done 
+        $YK "$CEDATEXT$CEDA"
+        $YK "$CEOHTEXT"
+
+#------------------------------------------------------------------------------------------------#-> Compile Edilen Dosyaların Bağlama İşlemi ve Executable Dosya Oluşturma
+$YK "$GCOMP" $($LK $YN"$LDU" 2>> "$HKD.$HKU") "$OD" $BK"$PA.$EDU" >> "$COMPKD.$HKU"
+"$GCOMP" $($LK $YN"$LDU" 2>> "$HKD.$HKU") "$OD" $BK"$PA.$EDU" 2>> "$COMPHKD.$HKU"
+$KOK "$LIBSK" 2>> "$HKD.$HKU"
+$DKTK $BK$YN"$LDU" $BK"$LIBSK"$KA 2>> "$HKD.$HKU"
+
+#------------------------------------------------------------------------------------------------#-> Executable Dosyanın Çalıştırılması
+if [[ -f "$PA.$EDU" ]] then $BK"$PA.$EDU" 2>> "$HKD.$HKU"; else $YK "$OEXETEXT"; fi
+
+#------------------------------------------------------------------------------------------------#-> OCPPD Sonu
+$YK "$PSHMTEXT"
+select i in "$PSETEXT" "$PSHTEXT"
+    do
+        case "$i" in
+            "$PSETEXT" ) $TK;
+                         $YK "$CASEEVET";
+                         $YK "$CASEEVET0";
+                         $YK "$CASEEVET1";
+                         $UK "$PSUSLPD";
+                         $TK;
+                         $CK "$CKD";;
+                
+            "$PSHTEXT" ) $TK;
+                         $DKTK $BK"$SRCSK"$KA$YN"$SDU" $BK;
+                         $DKTK $BK"$INCSK"$KA$YN"$HDU" $BK;
+                         $DKSK "$LIBSK" "$INCSK" "$SRCSK" "$PA.$EDU";  
+                         $YK "$CASEHAYIR";
+                         $YK "$CASEHAYIR0";
+                         $UK "$PSUSLPD";
+                         $TK;
+                         $CK "$CKD";;
+                
+                     * ) $TK;
+                         $YK "$CASEDIGER"; 
+                         $YK "$CASEDIGER0"; 
+                         $YK "$CASEDIGER1"; 
+                         $UK "$PSUSLPD";
+                         $TK;
+                         $CK "$CKD";;
+        esac
+    done

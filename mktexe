@@ -1,0 +1,95 @@
+#! /bin/bash
+
+#---> mktexe +kgd 'DosyaYolu/DosyaAdı' 'Sahiplik Bilgisi Değiştirme' 'Grup Bilgisi Değiştirme' <---#
+
+#---> GLOBAL DEĞİŞKEN <---#
+ DosyaYetkiNo=""
+#----------------------------#
+
+function YetkiHesaplaEkleCikar()
+{   if ! [[ -f "$2" ]]
+        then
+            echo "Dosya Bulunamadı"
+        else
+            local Yetki="$(ls -l | grep "$2" | awk '{print $1}')"
+            local Ky1="${Yetki:1:1}"
+            local Ky2="${Yetki:2:1}"
+            local Ky3="${Yetki:3:1}"
+            local Gy1="${Yetki:4:1}"
+            local Gy2="${Yetki:5:1}"
+            local Gy3="${Yetki:6:1}"
+            local Dy1="${Yetki:7:1}"
+            local Dy2="${Yetki:8:1}"
+            local Dy3="${Yetki:9:1}"
+
+                if [[ "$Ky1" == "r" ]] then ((DosyaYetkiNo+=400)); fi
+                if [[ "$Ky2" == "w" ]] then ((DosyaYetkiNo+=200)); fi
+                if [[ "$Ky3" == "x" ]] then ((DosyaYetkiNo+=100)); fi
+                if [[ "$Gy1" == "r" ]] then ((DosyaYetkiNo+=40)); fi
+                if [[ "$Gy2" == "w" ]] then ((DosyaYetkiNo+=20)); fi
+                if [[ "$Gy3" == "x" ]] then ((DosyaYetkiNo+=10)); fi
+                if [[ "$Dy1" == "r" ]] then ((DosyaYetkiNo+=4)); fi
+                if [[ "$Dy2" == "w" ]] then ((DosyaYetkiNo+=2)); fi
+                if [[ "$Dy3" == "x" ]] then ((DosyaYetkiNo+=1)); fi
+
+            local Ec="${1:0:1}"
+
+            local Yec1="${1:1:1}"
+            local Yec2="${1:2:1}"
+            local Yec3="${1:3:1}"
+
+                if [[ "$3" == 1 ]] then ((DosyaYetkiNo+=111)); fi
+                if [[ "$Ec" == "+" && "$Yec1" == "k" && "$Ky3" != "x" ]] then ((DosyaYetkiNo+=100)); fi
+                if [[ "$Ec" == "+" && "$Yec1" == "g" && "$Gy3" != "x" ]] then ((DosyaYetkiNo+=10)); fi
+                if [[ "$Ec" == "+" && "$Yec1" == "d" && "$Dy3" != "x" ]] then ((DosyaYetkiNo+=1));  fi
+                if [[ "$Ec" == "+" && "$Yec2" == "k" && "$Ky3" != "x" ]] then ((DosyaYetkiNo+=100)); fi
+                if [[ "$Ec" == "+" && "$Yec2" == "g" && "$Gy3" != "x" ]] then ((DosyaYetkiNo+=10)); fi
+                if [[ "$Ec" == "+" && "$Yec2" == "d" && "$Dy3" != "x" ]] then ((DosyaYetkiNo+=1)); fi
+                if [[ "$Ec" == "+" && "$Yec3" == "k" && "$Ky3" != "x" ]] then ((DosyaYetkiNo+=100)); fi
+                if [[ "$Ec" == "+" && "$Yec3" == "g" && "$Gy3" != "x" ]] then ((DosyaYetkiNo+=10)); fi
+                if [[ "$Ec" == "+" && "$Yec3" == "d" && "$Dy3" != "x" ]] then ((DosyaYetkiNo+=1)); fi
+
+                if [[ "$Ec" == "-" && "$Yec1" == "k" && "$Ky3" == "x" ]] then ((DosyaYetkiNo-=100)); fi
+                if [[ "$Ec" == "-" && "$Yec1" == "g" && "$Gy3" == "x" ]] then ((DosyaYetkiNo-=10)); fi
+                if [[ "$Ec" == "-" && "$Yec1" == "d" && "$Dy3" == "x" ]] then ((DosyaYetkiNo-=1)); fi
+                if [[ "$Ec" == "-" && "$Yec2" == "k" && "$Ky3" == "x" ]] then ((DosyaYetkiNo-=100)); fi
+                if [[ "$Ec" == "-" && "$Yec2" == "g" && "$Gy3" == "x" ]] then ((DosyaYetkiNo-=10)); fi
+                if [[ "$Ec" == "-" && "$Yec2" == "d" && "$Dy3" == "x" ]] then ((DosyaYetkiNo-=1)); fi
+                if [[ "$Ec" == "-" && "$Yec3" == "k" && "$Ky3" == "x" ]] then ((DosyaYetkiNo-=100)); fi
+                if [[ "$Ec" == "-" && "$Yec3" == "g" && "$Gy3" == "x" ]] then ((DosyaYetkiNo-=10)); fi
+                if [[ "$Ec" == "-" && "$Yec3" == "d" && "$Dy3" == "x" ]] then ((DosyaYetkiNo-=1)); fi
+    fi   }
+
+function SBDegistir()
+{   chown "$1" "$2";   }
+
+function GBDegistir()
+{   chgrp "$1" "$2";   }
+
+#---> DEĞİŞKEN ATAMA SCRİPT'İ <---#
+ if [[ "$#" == 1 ]] then DosyaAdi="${1##*/}"; DosyaYolu="${1%/*}"; fi
+     if [[ "$#" == 1 && "$DosyaAdi" == "$DosyaYolu" ]] then DosyaAdi="$1"; DosyaYolu="$PWD"; cd "$DosyaYolu";
+         elif [[ "$#" == 1 && "$DosyaAdi" != "$DosyaYolu" ]] then DosyaAdi="${1##*/}"; DosyaYolu="${1%/*}"; cd "$DosyaYolu"; fi
+    
+ if [[ "$#" == 2 ]] then DosyaAdi="${2##*/}"; DosyaYolu="${2%/*}"; fi
+     if [[ "$#" == 2 && "$DosyaAdi" == "$DosyaYolu" ]] then DosyaAdi="$2"; DosyaYolu="$PWD"; cd "$DosyaYolu";
+         elif [[ "$#" == 2 && "$DosyaAdi" != "$DosyaYolu" ]] then DosyaAdi="${2##*/}"; DosyaYolu="${2%/*}"; cd "$DosyaYolu"; fi
+ 
+ if [[ "$#" == 3 ]] then DosyaAdi="${1##*/}"; DosyaYolu="${1%/*}"; fi
+     if [[ "$#" == 3 && "$DosyaAdi" == "$DosyaYolu" ]] then DosyaAdi="$1"; DosyaYolu="$PWD"; cd "$DosyaYolu";
+         elif [[ "$#" == 3 && "$DosyaAdi" != "$DosyaYolu" ]] then DosyaAdi="${1##*/}"; DosyaYolu="${1%/*}"; cd "$DosyaYolu"; fi
+
+ if [[ "$#" == 4 ]] then DosyaAdi="${2##*/}"; DosyaYolu="${2%/*}"; fi
+     if [[ "$#" == 4 && "$DosyaAdi" == "$DosyaYolu" ]] then DosyaAdi="$2"; DosyaYolu="$PWD"; cd "$DosyaYolu";
+         elif [[ "$#" == 4 && "$DosyaAdi" != "$DosyaYolu" ]] then DosyaAdi="${2##*/}"; DosyaYolu="${2%/*}"; cd "$DosyaYolu"; fi
+#---------------------------------#
+
+touch "$DosyaAdi"
+YetkiHesaplaEkleCikar "$1" "$DosyaAdi" "$#"
+chmod "$DosyaYetkiNo" "$DosyaAdi"
+
+if [[ "$#" == 3 ]] then SBDegistir "$2" "$DosyaAdi"; fi
+if [[ "$#" == 4 ]] then SBDegistir "$3" "$DosyaAdi"; fi
+
+if [[ "$#" == 3 ]] then GBDegistir "$3" "$DosyaAdi"; fi
+if [[ "$#" == 4 ]] then GBDegistir "$4" "$DosyaAdi"; fi
